@@ -21,7 +21,8 @@ A Flask web application demonstrating Post-Quantum Cryptography (PQC) using the 
 
     **ðŸŸ¥ IMPORTANT: $pqcLibraryName Library Installation Troubleshooting ðŸŸ¥**
 
-    *   The equirements.txt file includes $pqcLibraryName. pip *should* automatically install it.
+    *   The 
+equirements.txt file includes $pqcLibraryName. pip *should* automatically install it.
     *   **Common Issue (Especially on Windows):** You might run pip install -r requirements.txt, see no errors, but then get ModuleNotFoundError: No module named 'pqcrypto.kem' (or similar for .sign) when running lask run.
     *   **Why?** This usually means the pre-compiled version (wheel) provided on PyPI for your specific combination of Windows, Python version, and architecture (e.g., 64-bit) is incomplete or faulty. It installs *something*, but not the necessary compiled submodules (kem, sign).
     *   **Troubleshooting Steps:**
@@ -63,12 +64,3 @@ A Flask web application demonstrating Post-Quantum Cryptography (PQC) using the 
 * **Encryption (Encapsulation):** Uses the imported kem_encrypt() function.
 * **Decryption (Decapsulation):** Uses the imported kem_decrypt() function.
 * **If PQC Fails to Load:** The application will run but show warnings, and PQC operations will be disabled with error messages in the UI.
-
-## Deployment (Optional)
-
-* Ensure the deployment environment can successfully install $pqcLibraryName. It might also need build tools if wheels aren't available or working for the target platform.
-
-## Group Members
-
-* Member 1 Name / GitHub Username
-* Member 2 Name / GitHub Username (if applicable)
