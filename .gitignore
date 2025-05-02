@@ -1,0 +1,20 @@
+﻿# Virtual Environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment files
+.env
+*.env.*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.spec
+
+# OS generated files
+.DS_Store
+Thumbs.db
