@@ -1,13 +1,22 @@
-﻿blinker==1.9.0
-click==8.1.8
-colorama==0.4.6
+﻿# Flask Core & Extensions
 Flask==3.1.0
 flask-talisman==1.1.0
-Flask-WTF==1.2.2
+Flask-WTF==1.2.1  # Matches your current list
+python-dotenv==1.1.0 # For local dev, ignored in production if vars set
+
+# WSGI Server
+gunicorn # Add this line (version will be latest stable)
+
+# pqcrypto Runtime Dependencies (needed by compiled code)
+cffi>=1.14.2  # Add cffi (use a suitable version constraint)
+pycparser     # Add pycparser (needed by cffi)
+
+# Dependencies (automatically installed, listed for clarity)
+blinker==1.9.0
+click==8.1.8
+colorama==0.4.6 # Usually for Windows, might not be strictly needed in Linux container
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.2
-pqcrypto==0.3.1
-python-dotenv==1.1.0
 Werkzeug==3.1.3
 WTForms==3.2.1

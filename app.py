@@ -45,6 +45,7 @@ except Exception as e:
     PQC_ENABLED = False
 
 # --- Flask App Setup ---
+# --- Flask App Setup ---
 load_dotenv() # Load environment variables from .env file
 
 app = Flask(__name__)
@@ -52,6 +53,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(16))
 if app.config['SECRET_KEY'] == 'dev-secret-key-please-change': # Check if default was loaded from .env
      print("Warning: SECRET_KEY is using the default development key. Please set a unique key in your .env file.")
+
+# --- Configure Session Cookie ---
+# Standard Flask config for HttpOnly cookie flag (helps prevent XSS)
+# This defaults to True in recent Flask versions, but explicitly setting it is good practice.
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+# Secure cookie flag is handled by Talisman or Flask config below based on environment
+app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
+
 
 # --- Security Headers ---
 # More restrictive CSP - adjust if you add external resources
@@ -70,8 +79,9 @@ talisman = Talisman(
     content_security_policy=csp,
     force_https=os.environ.get('FLASK_ENV') == 'production', # Force HTTPS only in production
     strict_transport_security=os.environ.get('FLASK_ENV') == 'production', # Enable HSTS in production
-    session_cookie_secure=os.environ.get('FLASK_ENV') == 'production', # Secure cookie flag
-    session_cookie_httponly=True, # HttpOnly cookie flag
+    # Talisman *can* set session_cookie_secure, aligning with force_https is common
+    session_cookie_secure=os.environ.get('FLASK_ENV') == 'production',
+    # REMOVED: session_cookie_httponly=True,
     frame_options='DENY', # Prevent framing
     content_security_policy_nonce_in=['script-src'] # If you need inline scripts later
 )

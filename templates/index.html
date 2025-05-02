@@ -5,84 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PQC Flask App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
+</head>
 <body>
-    <h1>Post-Quantum Cryptography Demo</h1>
-    {% if not PQC_ENABLED %}
-    <div class="flash-error">
-        <p><strong>Warning:</strong> The PQC library ('{{ PQC_LIBRARY_NAME }}') or the selected KEM algorithm ('{{ KEM_ALGORITHM }}') failed to load correctly. PQC functions are disabled.</p>
-        <p>Please check the console output when starting Flask ('flask run') for error details. You may need to troubleshoot the '{{ PQC_LIBRARY_NAME }}' installation (see README.md).</p>
-    </div>
-    {% else %}
-        <p>Using KEM Algorithm: <strong>{{ KEM_ALGORITHM }}</strong></p>
-    {% endif %}
+    <div class="container"> 
+
+        <h1>Post-Quantum Cryptography Demo</h1>
+
+        {# Display PQC Status #}
+        {% if not PQC_ENABLED %}
+        <div class="flash-messages flash pqc-warning"> {/* Add pqc-warning class */}
+            <p><strong>Warning:</strong> The PQC library ('{{ PQC_LIBRARY_NAME }}') or the selected KEM algorithm ('{{ KEM_ALGORITHM }}') failed to load correctly. PQC functions are disabled.</p>
+            <p>Please check the console output when starting Flask ('flask run') for error details. You may need to troubleshoot the '{{ PQC_LIBRARY_NAME }}' installation (see README.md).</p>
+        </div>
+        {% else %}
+            <p style="text-align: center; font-size: 1.1em; margin-top: -15px; margin-bottom: 25px;">Using KEM Algorithm: <strong>{{ KEM_ALGORITHM }}</strong></p>
+        {% endif %}
+
+        {# Clear Session Button #}
+        <form action="{{ url_for('clear_session') }}" method="POST" style="margin-bottom: 20px;">
+            <button type="submit" id="clear-session-button">Clear Stored Data</button>
+        </form>
 
 
-    <h2>1. Generate Keys</h2>
-    <form action="{{ url_for('generate_keys') }}" method="POST">
-        <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Generate PQC Key Pair</button>
-    </form>
-    {% if public_key and private_key %}
-    <div>
-        <h3>Generated Keys:</h3>
-        <p><strong>Public Key (Hex):</strong> <textarea readonly rows="5">{{ public_key }}</textarea></p>
-        <p><strong>Private Key (Hex):</strong> <textarea readonly rows="10">{{ private_key }}</textarea></p>
-        <small>Note: Keep your private key secure!</small>
-    </div>
-    {% endif %}
+        {# --- Flash Messages Area --- #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+            {% for category, message in messages %}
+              {# Filter out the pqc-warning category if PQC is disabled, as it's shown separately #}
+              {% if not (not PQC_ENABLED and category == 'pqc-warning') %}
+                 <p class="flash {{ category }}">{{ message }}</p>
+              {% endif %}
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
 
-    <hr>
 
-    <h2>2. Encapsulate Secret (Generate Ciphertext)</h2>
-    <form action="{{ url_for('encrypt_message') }}" method="POST">
+        {# --- Key Generation --- #}
+        <h2>1. Generate Keys</h2>
+        <form action="{{ url_for('generate_keys') }}" method="POST">
+            <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Generate PQC Key Pair</button>
+        </form>
+        {% if public_key and private_key %}
         <div>
-            <label for="public_key_enc">Public Key (Hex):</label><br>
-            <textarea id="public_key_enc" name="public_key" rows="5" cols="50" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ public_key if public_key else '' }}</textarea>
+            <h3>Generated Keys:</h3>
+            <p><strong>Public Key (Hex):</strong> <textarea readonly rows="5">{{ public_key }}</textarea></p>
+            <p><strong>Private Key (Hex):</strong> <textarea readonly rows="10">{{ private_key }}</textarea></p>
+            <small>Note: Keep your private key secure!</small>
         </div>
-        {# KEM doesn't encrypt an arbitrary message, it generates a shared secret and encrypts THAT.
-           So, we don't need a message input here. The library handles secret generation. #}
-        <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Encapsulate Secret</button>
-    </form>
-    {% if ciphertext and shared_secret_original %}
-    <div>
-        <h3>Encapsulation Result:</h3>
-        <p><strong>Ciphertext (Hex):</strong> <textarea readonly rows="5">{{ ciphertext }}</textarea></p>
-        <p><strong>Original Shared Secret (Hex - for demo only):</strong> <textarea readonly rows="2">{{ shared_secret_original }}</textarea></p>
-         <small>Bob sends the Ciphertext to Alice.</small>
-    </div>
-    {% endif %}
+        {% endif %}
 
-    <hr>
+        <hr>
 
-    <h2>3. Decapsulate Secret (Recover Secret)</h2>
-    <form action="{{ url_for('decrypt_message') }}" method="POST">
+        {# --- Encapsulation --- #}
+        <h2>2. Encapsulate Secret (Generate Ciphertext)</h2>
+        <form action="{{ url_for('encrypt_message') }}" method="POST">
+            <div>
+                <label for="public_key_enc">Public Key (Hex):</label>
+                <textarea id="public_key_enc" name="public_key" rows="5" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ public_key if public_key else '' }}</textarea>
+            </div>
+            <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Encapsulate Secret</button>
+        </form>
+        {% if ciphertext and shared_secret_original %}
         <div>
-            <label for="private_key_dec">Private Key (Hex):</label><br>
-            <textarea id="private_key_dec" name="private_key" rows="10" cols="50" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ private_key if private_key else '' }}</textarea>
+            <h3>Encapsulation Result:</h3>
+            <p><strong>Ciphertext (Hex):</strong> <textarea readonly rows="5">{{ ciphertext }}</textarea></p>
+            <p><strong>Original Shared Secret (Hex - for demo only):</strong> <textarea readonly rows="2">{{ shared_secret_original }}</textarea></p>
+             <small>Bob uses Alice's Public Key to create a Ciphertext and derive a Shared Secret.</small>
         </div>
+        {% endif %}
+
+        <hr>
+
+        {# --- Decapsulation --- #}
+        <h2>3. Decapsulate Secret (Recover Secret)</h2>
+        <form action="{{ url_for('decrypt_message') }}" method="POST">
+            <div>
+                <label for="private_key_dec">Private Key (Hex):</label>
+                <textarea id="private_key_dec" name="private_key" rows="10" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ private_key if private_key else '' }}</textarea>
+            </div>
+            <div>
+                <label for="ciphertext_dec">Ciphertext (Hex):</label>
+                <textarea id="ciphertext_dec" name="ciphertext" rows="5" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ ciphertext if ciphertext else '' }}</textarea>
+            </div>
+            <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Decapsulate Secret</button>
+        </form>
+        {% if shared_secret_recovered %}
         <div>
-            <label for="ciphertext_dec">Ciphertext (Hex):</label><br>
-            <textarea id="ciphertext_dec" name="ciphertext" rows="5" cols="50" required {% if not PQC_ENABLED %}readonly{% endif %}>{{ ciphertext if ciphertext else '' }}</textarea>
+            <h3>Decapsulation Result:</h3>
+             <p><strong>Recovered Shared Secret (Hex):</strong> <textarea readonly rows="2">{{ shared_secret_recovered }}</textarea></p>
+             <small>Alice uses her Private Key and Bob's Ciphertext to derive the same Shared Secret.</small>
         </div>
-        <button type="submit" {% if not PQC_ENABLED %}disabled title="PQC Library not available"{% endif %}>Decapsulate Secret</button>
-    </form>
-    {% if shared_secret_recovered %}
-    <div>
-        <h3>Decapsulation Result:</h3>
-         <p><strong>Recovered Shared Secret (Hex):</strong> <textarea readonly rows="2">{{ shared_secret_recovered }}</textarea></p>
-         <small>Alice uses her Private Key and the Ciphertext to get the same Shared Secret.</small>
+        {% endif %}
+
     </div>
-    {% endif %}
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash-messages">
-        {% for category, message in messages %}
-          <p class="flash {{ category }}">{{ message }}</p> {# Use flash category as class #}
-        {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-    </body>
+</body>
 </html>

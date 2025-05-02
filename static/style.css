@@ -1,88 +1,233 @@
-﻿body {
-    font-family: sans-serif;
-    padding: 20px;
-    line-height: 1.6;
+﻿/* --- Cyber Theme Base --- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap'); /* Optional Sci-Fi font */
+
+:root {
+    --bg-color: #0a0a0a; /* Near black */
+    --text-color: #e0e0e0; /* Light gray */
+    --primary-glow: #89F336; /* Lime Green */
+    --secondary-accent: #560591; /* Deep Purple */
+    --border-color: #333; /* Dark gray border */
+    --disabled-color: #555;
+    --error-color: #ff4d4d;
+    --warning-color: #ffcc00;
+    --monospace-font: 'Courier New', Courier, monospace;
+    --heading-font: 'Orbitron', sans-serif; /* Use Orbitron or fallback to sans-serif */
+    --body-font: 'Roboto', sans-serif;
 }
 
+body {
+    font-family: var(--body-font);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 0;
+    margin: 0;
+    line-height: 1.7;
+    /* Subtle scanline effect - uncomment if desired */
+    /* background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(137, 243, 54, 0.05) 3px, rgba(137, 243, 54, 0.05) 4px);
+    background-size: 100% 4px; */
+}
+
+.container {
+    max-width: 980px;
+    margin: 40px auto;
+    padding: 30px 50px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: rgba(20, 20, 20, 0.5); /* Slightly transparent dark background */
+    box-shadow: 0 0 25px rgba(137, 243, 54, 0.15); /* Subtle green glow around container */
+}
+
+/* --- Headings --- */
 h1, h2, h3 {
-    color: #333;
+    font-family: var(--heading-font);
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-textarea {
-    width: 90%; /* Adjust as needed */
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: monospace; /* Good for keys/code */
-    word-break: break-all; /* Ensure long hex strings wrap */
+h1 {
+    color: var(--primary-glow);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 40px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary-glow);
+    font-size: 3em;
+    text-shadow: 0 0 10px var(--primary-glow), 0 0 15px rgba(137, 243, 54, 0.5); /* Neon Glow */
 }
 
-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
+h2 {
+    color: var(--secondary-accent);
+    margin-top: 50px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--secondary-accent);
+    padding-bottom: 10px;
+    font-size: 2em;
+    text-shadow: 0 0 5px rgba(86, 5, 145, 0.7); /* Subtle purple glow */
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-
-form div {
+h3 {
+    color: var(--text-color);
+    margin-top: 25px;
     margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: 400; /* Lighter weight for h3 */
+}
+
+/* --- Forms & Input Elements --- */
+form div {
+    margin-bottom: 25px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-hr {
-    margin: 30px 0;
-    border: 0;
-    border-top: 1px solid #eee;
-}
-
-/* Flash Messages Styling */
-.flash-messages {
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 4px;
-    border: 1px solid transparent; /* Base border */
-}
-
-.flash.success { /* Match category 'success' */
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.flash.error { /* Match category 'error' */
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #f5c6cb;
-}
-
-.flash.info { /* Match category 'info' */
-    background-color: #cce5ff;
-    color: #004085;
-    border-color: #b8daff;
-}
-
-small {
-    color: #666;
-    display: block; /* Make small tags block elements */
-    margin-top: -5px; /* Adjust spacing */
     margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    margin-top: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-family: var(--monospace-font);
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #1a1a1a; /* Darker input background */
+    color: var(--primary-glow); /* Lime green text for data */
+    min-height: 120px;
+    resize: vertical;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+textarea:focus {
+    border-color: var(--primary-glow);
+    outline: none;
+    box-shadow: 0 0 10px var(--primary-glow), inset 0 1px 3px rgba(0, 0, 0, 0.5); /* Outer glow */
+}
+
+textarea[readonly] {
+    background-color: #111; /* Even darker for readonly */
+    color: #aaa; /* Muted text color */
+    border-color: #222;
+    cursor: default;
+}
+textarea[readonly]:focus {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5); /* No glow on readonly focus */
+    border-color: #222;
+}
+
+/* --- Buttons --- */
+button {
+    background-color: var(--secondary-accent);
+    color: #ffffff;
+    padding: 12px 30px;
+    border: 1px solid var(--secondary-accent);
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--heading-font);
+    font-size: 1.2em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    text-transform: uppercase;
+    box-shadow: 0 0 5px rgba(86, 5, 145, 0.5);
+}
+
+button:hover {
+    background-color: var(--bg-color); /* Dark background */
+    color: var(--primary-glow); /* Lime green text */
+    border: 1px solid var(--primary-glow); /* Lime green border */
+    box-shadow: 0 0 15px var(--primary-glow); /* Intense green glow */
+    transform: scale(1.02); /* Slight scale up */
+}
+
+button:disabled {
+    background-color: var(--disabled-color);
+    color: #999;
+    border-color: #444;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Special button for clear session */
+#clear-session-button {
+    background-color: #333;
+    border-color: #444;
+    color: #ccc;
+    font-size: 0.8em;
+    padding: 6px 12px;
+    float: right;
+    margin-top: -10px;
+    box-shadow: none;
+}
+#clear-session-button:hover {
+    background-color: #444;
+    color: var(--primary-glow);
+    border-color: var(--primary-glow);
+    box-shadow: 0 0 8px var(--primary-glow);
+}
+
+/* --- Horizontal Rule --- */
+hr {
+    margin: 60px 0;
+    border: 0;
+    border-top: 2px dashed var(--primary-glow); /* Dashed lime green line */
+    opacity: 0.6;
+}
+
+/* --- Flash Messages --- */
+.flash-messages {
+    padding: 15px 20px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 1em;
+    line-height: 1.5;
+    background-color: rgba(30, 30, 30, 0.8); /* Dark semi-transparent background */
+    position: relative; /* For potential pseudo-elements */
+}
+
+/* PQC Disabled Warning */
+.flash.pqc-warning {
+    color: var(--warning-color);
+    border-color: var(--warning-color);
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
+}
+
+.flash.success {
+    color: var(--primary-glow);
+    border-color: var(--primary-glow);
+    box-shadow: 0 0 8px rgba(137, 243, 54, 0.4);
+}
+
+.flash.error {
+    color: var(--error-color);
+    border-color: var(--error-color);
+    box-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
+}
+
+.flash.info {
+    color: var(--secondary-accent);
+    border-color: var(--secondary-accent);
+    box-shadow: 0 0 8px rgba(86, 5, 145, 0.4);
+}
+
+/* --- Small Text --- */
+small {
+    color: #aaa; /* Lighter gray for contrast */
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    font-style: normal; /* Remove italic */
+    text-align: right; /* Align to right */
 }
