@@ -58,7 +58,7 @@ equirements.txt file includes $pqcLibraryName. pip *should* automatically instal
 * The pp.py file is configured to use $kemAlgorithm by default from the $pqcLibraryName library.
 * This algorithm is one of the KEMs selected by NIST for standardization (ML-KEM). It offers a balance of security and performance.
 
-## Application Functionality (If PQC is working)
+## Application Functionality
 
 * **Key Generation:** Uses the imported kem_generate_keypair() function for $kemAlgorithm.
 * **Encryption (Encapsulation):** Uses the imported kem_encrypt() function.
